@@ -1,0 +1,43 @@
+#
+#                 Flags
+#------------------------ ---------------------------- -------------------------
+#  a - LACP Active          p - LACP Passive           * - static fallback
+#  F - Fallback enabled     f - Fallback configured    ^ - individual fallback
+#  U - In Use               D - Down
+#  + - In-Sync              - - Out-of-Sync            i - incompatible with agg
+#  P - bundled in Po        s - suspended              G - Aggregable
+#  I - Individual           S - ShortTimeout           w - wait for agg
+#
+#Number of channels in use: 2
+#Number of aggregators: 2
+#
+#   Port-Channel       Protocol    Ports
+#------------------ -------------- ----------------------
+#   Po47(U)            LACP(a)     Et47(G+) Et48(G+)
+#   Po51(U)            LACP(a)     Et51/1(G+) Et52/1(G+)
+Value Required,Filldown BUNDLE_IFACE (Po\d+)
+Value Filldown BUNDLE_STATUS (\(\w+\))
+Value Filldown BUNDLE_PROTO (\w+)
+Value Filldown BUNDLE_PROTO_STATE (\(\w+\))
+Value List PHYS_IFACE (Et[0-9\/]+)
+Value List PHYS_IFACE_STATUS (\([a-zA-Z^*+-]+\))
+
+Start
+  ^\s+Port-Channel\s+Protocol -> Header
+
+Header
+  ^--- -> List
+
+List
+  ^\s+Po -> Continue.Record
+  ^\s+${BUNDLE_IFACE}${BUNDLE_STATUS}\s+${BUNDLE_PROTO}${BUNDLE_PROTO_STATE}\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+Po\d+\(\w+\)\s+\w+\(\w+\)\s+Et.+?\(.+?\)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+Po\d+\(\w+\)\s+\w+\(\w+\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+Po\d+\(\w+\)\s+\w+\(\w+\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+Po\d+\(\w+\)\s+\w+\(\w+\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+Po\d+\(\w+\)\s+\w+\(\w+\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+Et.+?\(.+?\)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s{24}${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s{24}Et.+?\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s{24}Et.+?\s+Et.+?\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s{24}Et.+?\s+Et.+?\s+Et.+?\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s{24}Et.+?\s+Et.+?\s+Et.+?\s+Et.+?\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue

@@ -1,0 +1,16 @@
+#PIM Hash Information for VRF "default"
+#PIM RPs for group 225.0.0.35, using hash-length: 1 from BSR: 10.210.255.61
+#  RP 10.210.255.60, hash: 968088410 (selected)
+#
+Value GROUP (\d+\.\d+\.\d+\.\d+)
+Value HASH_LENGTH (v\d+)
+Value BSR (\d+\.\d+\.\d+\.\d+)
+Value SELECTED_RP (\d+\.\d+\.\d+\.\d+)
+
+Start
+  ^PIM RPs for group ${GROUP}, using hash-length: ${HASH_LENGTH} from BSR: ${BSR}
+  ^\s+RP ${SELECTED_RP}, hash: \d+ \(selected\)
+
+EOF
+
+

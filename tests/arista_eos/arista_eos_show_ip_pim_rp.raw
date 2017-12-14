@@ -1,0 +1,6 @@
+Group: 225.0.0.0/22
+  RP: 192.168.123.60
+    Uptime: 354d17h, Expires: 0:02:22, Priority: 5
+  RP: 192.168.123.7
+    Uptime: 354d17h, Expires: 0:02:22, Priority: 20
+

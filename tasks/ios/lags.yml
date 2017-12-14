@@ -1,0 +1,29 @@
+#
+# Retrieve lag details
+#
+---
+- name: "Fetch lag"
+  ntc_show_command:
+    command: "show etherchannel summary"
+    #connection: "offline"
+    #file: "{{ playbook_dir }}/tests/{{ platforms[os] }}/{{platforms[os] }}_show_etherchannel_summary.raw"
+    template_dir: "{{ inventory_dir }}/ntc-templates"
+    platform: "{{ platforms[os] }}"
+    host: "{{ inventory_hostname }}"
+    username: "{{ ansible_ssh_user }}"
+    password: "{{ ansible_ssh_pass }}"
+    connection_args:
+      ssh_config_file: "{{ inventory_dir }}/ssh_config"
+  register: lags
+  tags: ['fetch', 'fetch-lags']
+
+- debug:
+    msg: "{{ lags }}"
+  tags: ['fetch', 'fetch-lags']
+
+- copy:
+    content: "{{ lags.response|to_nice_yaml(indent=2) }}"
+    dest: "{{ host_results }}/lags-{{mcast_group}}.yaml"
+  tags: ['fetch', 'fetch-lags']
+
+# vim: set ts=2 shiftwidth=2 expandtab:

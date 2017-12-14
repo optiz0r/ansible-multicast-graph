@@ -1,0 +1,6 @@
+Type: S - Static, D - Dynamic, R - Router port, F - Fabricpath core port
+
+Vlan  Group Address      Ver  Type  Port list
+1041  225.0.0.131        v3   D     Eth1/2 Eth1/23 Eth1/1
+                                     Eth1/21 Eth1/25
+

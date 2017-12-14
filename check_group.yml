@@ -1,0 +1,63 @@
+---
+- name: Collate multicast details
+  hosts: all
+  connection: local
+  gather_facts: false
+  vars_files:
+    - "{{vault_file|default('./secrets/vault.yml')}}"
+    - "{{inventory_dir}}/vars/ntc.yml"
+  vars:
+    mcast_group: "UNSET"
+    mcast_net: "224.0.0.0/4"
+    results: "{{inventory_dir}}/outputs"
+    host_results: "{{ results }}/{{ inventory_hostname }}"
+    task_list:
+      - "tasks/{{os}}/{{task_path|basename}}"
+      - "{{task_path}}"
+
+  tasks:
+    - name: Validate multicast group address
+      fail:
+        msg: "Valid multicast group must be passed to playbook with -e/--extra-vars, e.g. `-e mcast_group=224.0.0.1`"
+      when: not mcast_group|ipaddr or not mcast_group|ipaddr(mcast_net)
+
+    - name: Create output directories
+      local_action: file path={{ results }} state=directory
+      run_once: true
+      tags: ['setup']
+
+    - name: Create host output directories
+      local_action: file path={{ host_results }} state=directory
+      tags: ['setup']
+
+    - name: "Include tasks"
+      include: "{{ lookup('first_found', task_list) }}"
+      with_fileglob: [ "tasks/*.yml" ]
+      loop_control:
+        loop_var: task_path
+
+    - name: "Compile Report"
+      template:
+        src: "templates/report.j2"
+        dest: "{{results}}/{{mcast_group}}.yaml"
+      run_once: true
+      tags: ['compile']
+
+    - name: "Generate Graph"
+      template:
+        src: "templates/graph.j2"
+        dest: "{{results}}/{{mcast_group}}.dot"
+      vars:
+        report: "{{ lookup('file', results + '/' + mcast_group + '.yaml')|from_yaml }}"
+        edges: "{{ report|get_mroute_edges(mcast_group, play_hosts) }}"
+      run_once: true
+      tags: ['generate']
+
+    - name: "Render Graph"
+      command: dot -Tpng "{{results}}/{{mcast_group}}.dot" -o "{{results}}/{{mcast_group}}.png"
+      run_once: true
+      tags: ['render']
+
+
+
+# vim: set ts=2 shiftwidth=2 expandtab :

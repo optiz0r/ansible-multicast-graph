@@ -1,0 +1,10 @@
+---
+_meta:
+  compiled_at: "{#% now 'local', '%Y-%m-%d %H:%M:%S %z' %#}"
+{% for host in play_hosts %}
+{{ host }}:
+{% for input in ['rp', 'mroutes', 'snooping', 'neighbours', 'interfaces', 'lags'] %}
+  {{ input }}:
+{{ lookup('file', results + '/' + host + '/' + input + '-' + mcast_group + '.yaml')|indent_block(4) }}
+{% endfor %}
+{% endfor %}

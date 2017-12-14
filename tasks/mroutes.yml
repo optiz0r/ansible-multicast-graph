@@ -1,0 +1,29 @@
+#
+# Retrieve multicast routing table entries
+#
+---
+- name: "Fetch multicast routes"
+  ntc_show_command:
+    command: "show ip mroute {{ mcast_group }}"
+    #connection: "offline"
+    #file: "{{ playbook_dir }}/tests/{{ platforms[os] }}/{{platforms[os] }}_show_ip_mroute.raw"
+    template_dir: "{{ inventory_dir }}/ntc-templates"
+    platform: "{{ platforms[os] }}"
+    host: "{{ inventory_hostname }}"
+    username: "{{ ansible_ssh_user }}"
+    password: "{{ ansible_ssh_pass }}"
+    connection_args:
+      ssh_config_file: "{{ inventory_dir }}/ssh_config"
+  register: mroute
+  tags: ['fetch', 'fetch-mroutes']
+
+- debug:
+    msg: "{{ mroute }}"
+  tags: ['fetch', 'fetch-mroutes']
+
+- copy:
+    content: "{{ mroute.response|to_nice_yaml(indent=2) }}"
+    dest: "{{ host_results }}/mroutes-{{mcast_group}}.yaml"
+  tags: ['fetch', 'fetch-mroutes']
+
+# vim: set ts=2 shiftwidth=2 expandtab:

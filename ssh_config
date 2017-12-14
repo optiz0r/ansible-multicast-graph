@@ -1,0 +1,9 @@
+Host bastionhost.local
+  Hostname bastionhost.local
+  ControlMaster auto
+  ControlPath ~/.ssh/ansible-%r@%h:%p
+  ControlPersist 5m
+
+Host *
+  ProxyCommand ssh -W %h:%p bastionhost.local
+

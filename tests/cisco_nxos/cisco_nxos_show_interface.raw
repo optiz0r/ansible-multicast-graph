@@ -1,0 +1,13 @@
+loopback0 is up
+
+  Hardware: Loopback
+  Internet Address is 192.168.123.60/32
+  MTU 1500 bytes, BW 8000000 Kbit,, BW 8000000 Kbit, DLY 5000 usec
+  reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation LOOPBACK, medium is broadcast
+    273399342 packets input 19752844568 bytes
+    0 multicast frames 0 compressed
+    0 input errors 0 frame 0 overrun 0 fifo
+    1 packets output 56 bytes 0 underruns
+    0 output errors 0 collisions 0 fifo
+

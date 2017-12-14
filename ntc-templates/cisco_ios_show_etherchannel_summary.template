@@ -1,0 +1,32 @@
+#
+#Group  Port-channel  Protocol    Ports
+#------+-------------+-----------+-----------------------------------------------
+#47     Po47(SU)        LACP      Gi1/47(P)   Gi1/48(P)
+#
+Value Required,Filldown BUNDLE_IFACE (Po\d+)
+Value BUNDLE_STATUS (\(\S+\))
+Value BUNDLE_PROTO (\S+)
+Value BUNDLE_PROTO_STATE (\(\S+\))
+Value List PHYS_IFACE (\S+)
+Value List PHYS_IFACE_STATUS (\(\S+\))
+
+Start
+  ^Group\s+ -> Header
+
+Header
+  ^--- -> List
+
+List
+  ^\d+ -> Continue.Record
+  ^\d+\s+${BUNDLE_IFACE}${BUNDLE_STATUS}\s+${BUNDLE_PROTO}\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\d+\s+\S+\s+\S+\s+\S+\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\d+\s+\S+\s+\S+\s+\S+\s+\S+\(\S+\)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\d+\s+\S+\s+\S+\s+\S+\s+\S+\(\S+\)\s+\S+\(\S+\)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\d+\s+\S+\s+\S+\s+\S+\s+\S+\(\S+\)\s+\S+\(\S+\)\s+\S+\(\S+\)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\d+\s+\S+\s+\S+\s+\S+\s+\S+\(\S+\)\s+\S+\(\S+\)\s+\S+\(\S+\)\s+\S+\(\S+\)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+S+(S+)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+S+(S+)\s+S+(\S+)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+S+(S+)\s+S+(\S+)\s+\S+(\S+)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+S+(S+)\s+S+(\S+)\s+\S+(\S+)\s+\S+(\S+)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue
+  ^\s+S+(S+)\s+S+(\S+)\s+\S+(\S+)\s+\S+(\S+)\s+\S+(\S+)\s+${PHYS_IFACE}${PHYS_IFACE_STATUS}(\s|$$) -> Continue

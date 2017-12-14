@@ -1,0 +1,13 @@
+#RP 10.210.255.60
+#  PIM v2 Hash Values:
+#  RP: 10.210.255.60
+#    Uptime: 354d12h, Expires: 0:02:21, Priority: 5, HashMaskLen: 1, HashMaskValue: 968088410
+#  RP: 10.210.255.7
+#    Uptime: 354d12h, Expires: 0:02:21, Priority: 20, HashMaskLen: 1, HashMaskValue: 1591431583
+Value Filldown SELECTED_RP (\d+\.\d+\.\d+\.\d+)
+
+Start 
+  ^RP ${SELECTED_RP} -> Record
+
+EOF
+

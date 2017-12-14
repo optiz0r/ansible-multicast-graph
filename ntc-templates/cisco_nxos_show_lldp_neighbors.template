@@ -1,0 +1,13 @@
+Value NEIGHBOR (\S+?)
+Value LOCAL_INTERFACE (Eth(ernet)?\S+)
+Value NEIGHBOR_INTERFACE (\S+)
+
+Start
+  ^Device.*ID -> LLDP
+
+LLDP
+  ^${NEIGHBOR}${LOCAL_INTERFACE}\s+\d+\s+[\w+\s]+\S+\s+${NEIGHBOR_INTERFACE}\s*$$ -> Record
+  ^${NEIGHBOR}\s+${LOCAL_INTERFACE}\s+\d+\s+[\w+\s]+\S+\s+${NEIGHBOR_INTERFACE}\s*$$ -> Record
+  ^\S+$$ -> Continue.Record
+  ^${NEIGHBOR}$$
+  ^\s+${LOCAL_INTERFACE}\s+\d+\s+[\w+\s]+\S+\s+${NEIGHBOR_INTERFACE}$$ -> Record

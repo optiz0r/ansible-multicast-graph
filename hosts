@@ -1,0 +1,12 @@
+[core]
+core1 os=nxos port=8182
+core2 os=eos
+core3 os=ios
+
+[all:vars]
+ansible_python_interpreter="/usr/bin/env python"
+
+# Used by built-in modules to reach devices via jump host
+# Uncomment if needed
+#ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q bastionhost"'
+

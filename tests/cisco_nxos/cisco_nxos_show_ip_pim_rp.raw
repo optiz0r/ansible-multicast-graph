@@ -1,0 +1,9 @@
+PIM RP Status Information for VRF "default"
+PIM RP Information for group 239.65.0.123 in VRF "default"
+
+RP: 192.168.123.16, (0), uptime: 1w2d, expires: 00:02:06,
+  priority: 10, RP-source: 192.168.123.61 (B), group ranges:
+        239.129.0.0/16   239.65.0.0/16
+RP: 192.168.123.17, (0), uptime: 1w2d, expires: 00:02:06,
+  priority: 5, RP-source: 192.168.123.61 (B), group ranges:
+        239.129.0.0/16   239.65.0.0/16

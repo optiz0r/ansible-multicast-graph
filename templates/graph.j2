@@ -1,0 +1,108 @@
+{% macro link_colour(publisher) %}{% if publisher == '*' %}red{% else %}darkgreen{% endif %}{% endmacro %}
+digraph network {
+  /* graph metadata */
+  label="Multicast routing for {{ mcast_group }} (compiled {{ report._meta.compiled_at }})";
+  labelloc=top;
+  labeljust=left;
+
+  /* hosts */
+{% for host in play_hosts %}
+{%   if host in report %}
+{%     if report[host].mroutes|has_mroutes %}
+    "{{ host }}" [
+        shape=box;
+{%        if report[host].rp|has_rp %}
+{%          if report[host].rp|get_rp_address|is_rp(report[host].interfaces) %}
+        style=filled;
+        fillcolor=grey80;
+{%          endif %}
+        label="{{ host }}\nRP: {{ report[host].rp|get_rp_address }}"
+{%        endif %}
+    ];
+{%     endif %}
+{%   endif %}
+{% endfor %}
+
+  /* multicast routes */
+{% for label, edge in edges.iteritems() %}
+    {{ edge.left_host }} -> {{ edge.right_host }} [label="{{ label }}"; fontcolor="{{ link_colour(edge.publisher) }}"; color="{{ link_colour(edge.publisher) }}"]
+{% endfor %}
+
+  /* IGMP snoops */
+{% for host in play_hosts %}
+{%   if host in report and report[host].snooping|has_snooping %}
+{%     for entry in report[host].snooping %}
+{%       for port in entry.ports %}
+{%         if port != "Cpu" %}
+    {{ host }} -> {{ report|get_interface_neighbour(host, port) }} [color="blue"; fontcolor="blue"; label="{{ port }}";];
+{%         endif %}
+{%       endfor %}
+{%     endfor %}
+{%   endif %}
+{% endfor %}
+
+  /* Publishers */
+{% for host in play_hosts %}
+{%   if host in report and report[host].mroutes|has_mroutes %}
+{%     for publisher in report[host].mroutes|get_publishers(report[host].interfaces) %}
+  {{ host}}_{{ publisher.hostname }} [
+    shape=diamond;
+    style=filled;
+    fillcolor=orange;
+    label="{{ publisher.hostname }}\n{{ publisher.ip|ipaddr('address') }}";
+  ];
+  {{ host }}_{{ publisher.hostname }} -> {{ host }}
+{%     endfor %}
+{%   endif %}
+{% endfor %}
+
+  /* Legend */
+  subgraph cluster_key {
+    label="Key"
+    pos="0,0!"
+
+    rp [
+      shape=box;
+      style=filled;
+      fillcolor=grey80;
+      label="RP";
+    ];
+
+    publisher [
+      shape=diamond;
+      style=filled;
+      fillcolor=orange;
+      label="Publisher";
+    ];
+
+    left [
+      shape=box;
+      label="Queried Device";
+    ];
+    right [
+      label="Discovered Device";
+    ];
+
+    left -> right [
+      label="PIM (*,G) join";
+      fontcolor="{{ link_colour('*') }}";
+      color="{{ link_colour('*') }}";
+    ]
+
+    left -> right [
+      label="PIM (S,G) join";
+      fontcolor="{{ link_colour('1.2.3.4') }}";
+      color="{{ link_colour('1.2.3.4') }}";
+    ]
+
+    left -> right [
+      label="IGMP join";
+      fontcolor="blue";
+      color="blue";
+    ]
+
+    publisher -> left;
+
+  }
+}
+{# vim: set ts=2 shiftwidth=2 expandtab: #}

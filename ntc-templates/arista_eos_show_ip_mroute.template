@@ -1,0 +1,46 @@
+#PIM Sparse Mode Multicast Routing Table
+#Flags: E - Entry forwarding on the RPT, J - Joining to the SPT
+#    R - RPT bit is set, S - SPT bit is set, L - Source is attached
+#    W - Wildcard entry, X - External component interest
+#    I - SG Include Join alert rcvd, P - Ex-Prune alert rcvd
+#    H - Joining SPT due to policy, D - Joining SPT due to protocol
+#    Z - Entry marked for deletion, C - Learned from a DR via a register
+#    A - Learned via Anycast RP Router, M - Learned via MSDP
+#    N - May notify MSDP, K - Keepalive timer not running
+#    T - Switching Incoming Interface, B - Learned via Border Router
+#RPF route: U - From unicast routing table
+#           M - From multicast routing table
+#224.0.64.194
+#  0.0.0.0, 17:06:55, RP 156.48.99.5, flags: W
+#    Incoming interface: Ethernet33
+#    RPF route: [U] 156.48.99.5/32 [200/0] via 172.30.1.173
+#    Outgoing interface list:
+#      Vlan3407
+#
+Value PUBLISHER (\*|\d+\.\d+\.\d+\.\d+)
+Value Filldown GROUP (\d+\.\d+\.\d+\.\d+)
+Value UPTIME (\S+)
+Value RP (\*|\d+\.\d+\.\d+\.\d+)
+Value INCOMING_IFACE ([a-zA-Z0-9/-]+)
+Value OUTGOING_IFACE_COUNT (\d+)
+Value List OUTGOING_IFACE (\S+)
+
+Start
+  ^${GROUP}$$ -> List
+
+List
+  ^\s+${PUBLISHER}, ${UPTIME}, flags: .* -> Entry
+  ^\s+${PUBLISHER}, ${UPTIME}, RP ${RP}, flags: .* -> Entry
+
+Entry
+  ^\s{2}\S -> Continue.Record
+  ^\s+Incoming interface: ${INCOMING_IFACE}
+  ^\s+RPF route:.*
+  ^\s+Outgoing interface list: -> Outgoing_List
+
+Outgoing_List
+  ^\s{6}${OUTGOING_IFACE}\s*$$
+  ^\s{1,3}\S -> Continue.Record
+  ^\s+${PUBLISHER}, ${UPTIME}, flags: .* -> Entry
+  ^\s+${PUBLISHER}, ${UPTIME}, RP ${RP}, flags: .* -> Entry
+

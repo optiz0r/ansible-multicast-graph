@@ -1,0 +1,22 @@
+Capability codes:
+  (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+  (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+Device ID            Local Intf      Hold-time  Capability  Port ID
+core2.local          Eth1/16         120        BR          Ethernet48
+access9.local        Eth1/29         120        BR          Ethernet43
+access9.local        Eth1/30         120        BR          Ethernet42
+access5.local        Eth1/31         120        B           Eth1/46
+access5.local        Eth1/32         120        B           Eth1/45
+access25.local       Eth1/41         120        BR          Ethernet45
+access25.local       Eth1/42         120        BR          Ethernet46
+access15.local       Eth1/43         120        BR          Ethernet47
+access15.local       Eth1/44         120        BR          Ethernet48
+access24.local       Eth1/45         120        BR          Ethernet45
+access24.local       Eth1/46         120        BR          Ethernet46
+access14.local       Eth1/47         120        BR          Ethernet45
+access14.local       Eth1/48         120        BR          Ethernet46
+access12.local       Eth2/3          120        BR          Ethernet50/1
+access22.local       Eth2/4          120        BR          Ethernet50/1
+core1.local          Eth2/5          120        B           Eth2/5
+core1.local          Eth2/6          120        B           Eth2/6
+Total entries displayed: 16

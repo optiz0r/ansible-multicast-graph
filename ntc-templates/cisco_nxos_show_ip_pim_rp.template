@@ -1,0 +1,38 @@
+#PIM RP Status Information for VRF "default"
+#PIM RP Information for group 239.65.0.123 in VRF "default"
+#
+#RP: 10.210.255.16, (0), uptime: 1w2d, expires: 00:02:06,
+#  priority: 10, RP-source: 10.210.255.61 (B), group ranges:
+#        239.129.0.0/16   239.65.0.0/16
+#RP: 10.210.255.17, (0), uptime: 1w2d, expires: 00:02:06,
+#  priority: 5, RP-source: 10.210.255.61 (B), group ranges:
+#        239.129.0.0/16   239.65.0.0/16
+#
+Value Filldown GROUP (\d+\.\d+\.\d+\.\d+)
+Value Filldown VRF ([a-z]+)
+Value RP (\d+\.\d+\.\d+\.\d+)
+Value UPTIME (\S+)
+Value EXPIRES ([0-9:]+)
+Value PRIORITY (\d+)
+Value RP_SOURCE (\d+\.\d+\.\d+\.\d+)
+Value RP_PROTOCOL ([A-Z])
+Value List GROUP_RANGES (\d+\.\d+\.\d+\.\d+\/\d+)
+
+Start
+  ^PIM RP Status Information for VRF "${VRF}"
+  ^PIM RP Information for group ${GROUP} in VRF "${VRF}"
+  ^$$ -> RP_List
+
+RP_List
+  ^RP: ${RP}\*?, \(\d+\), uptime: ${UPTIME}, expires: ${EXPIRES}, -> RP_Entry
+
+RP_Entry
+  ^\s+priority: ${PRIORITY}, RP-source: ${RP_SOURCE} \(${RP_PROTOCOL}\), group ranges:
+  ^\s+${GROUP_RANGES}(\s|$$) -> Continue
+  ^\s+\S+\s+${GROUP_RANGES}(\s|$$) -> Continue
+  ^\s+\S+\s+\S+\s+${GROUP_RANGES}(\s|$$) -> Continue
+  ^\s+\S+\s+\S+\s+\S+\s+${GROUP_RANGES}(\s|$$)
+  ^RP: -> Continue.Record
+  ^RP: ${RP}, \(\d+\), uptime: ${UPTIME}, expires: ${EXPIRES}, -> Next
+  ^$$ -> Record -> RP_List
+

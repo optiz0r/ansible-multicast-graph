@@ -1,0 +1,29 @@
+#
+# Retrieve LLDP neighbours
+#
+---
+- name: "Fetch LLDP neighbours"
+  ntc_show_command:
+    command: "show lldp neighbors"
+    #connection: "offline"
+    #file: "{{ playbook_dir }}/tests/cisco_nxos/cisco_nxos_show_lldp_neighbors.raw"
+    template_dir: "{{ inventory_dir }}/ntc-templates"
+    platform: "{{ platforms[os] }}"
+    host: "{{ inventory_hostname }}"
+    username: "{{ ansible_ssh_user }}"
+    password: "{{ ansible_ssh_pass }}"
+    connection_args:
+      ssh_config_file: "{{ inventory_dir }}/ssh_config"
+  register: neighbours
+  tags: ['fetch', 'fetch-neighbours']
+
+- debug:
+    msg: "{{ neighbours }}"
+  tags: ['fetch', 'fetch-neighbours']
+
+- copy:
+    content: "{{ neighbours.response|to_nice_yaml(indent=2) }}"
+    dest: "{{ host_results }}/neighbours-{{mcast_group}}.yaml"
+  tags: ['fetch', 'fetch-neighbours']
+
+# vim: set ts=2 shiftwidth=2 expandtab:

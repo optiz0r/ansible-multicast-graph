@@ -1,0 +1,21 @@
+PIM Sparse Mode Multicast Routing Table
+Flags: E - Entry forwarding on the RPT, J - Joining to the SPT
+    R - RPT bit is set, S - SPT bit is set, L - Source is attached
+    W - Wildcard entry, X - External component interest
+    I - SG Include Join alert rcvd, P - Ex-Prune alert rcvd
+    H - Joining SPT due to policy, D - Joining SPT due to protocol
+    Z - Entry marked for deletion, C - Learned from a DR via a register
+    A - Learned via Anycast RP Router, M - Learned via MSDP
+    N - May notify MSDP, K - Keepalive timer not running
+    T - Switching Incoming Interface, B - Learned via Border Router
+RPF route: U - From unicast routing table
+           M - From multicast routing table
+225.0.0.35
+  0.0.0.0, 2d18h, RP 192.168.123.60, flags: W
+    Incoming interface: Ethernet48
+    RPF route: [U] 192.168.123.60/32 [110/12] via 192.168.123.57
+    Outgoing interface list:
+      Vlan2300
+  192.168.123.203, 0:52:41, flags: R
+    Incoming interface: Ethernet48
+    RPF route: [U] 192.168.123.60/32 [110/12] via 192.168.123.57

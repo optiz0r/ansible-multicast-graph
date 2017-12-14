@@ -1,0 +1,30 @@
+#
+# Retrieve igmp snooping entries
+#
+---
+- name: "Fetch IGMP Snooping entries"
+  ntc_show_command:
+    command: "show ip igmp snooping groups {{ mcast_group }}"
+    #connection: "offline"
+    #file: "{{ playbook_dir }}/tests/{{ platforms[os] }}/{{platforms[os] }}_show_ip_igmp_snooping_groups.raw"
+    template_dir: "{{ inventory_dir }}/ntc-templates"
+    platform: "{{ platforms[os] }}"
+    host: "{{ inventory_hostname }}"
+    username: "{{ ansible_ssh_user }}"
+    password: "{{ ansible_ssh_pass }}"
+    connection_args:
+      ssh_config_file: "{{ inventory_dir }}/ssh_config"
+  register: snooping
+  tags: ['fetch', 'fetch-snooping']
+
+- debug:
+    msg: "{{ snooping }}"
+  tags: ['fetch', 'fetch-snooping']
+
+- copy:
+    content: "{{ snooping.response|to_nice_yaml(indent=2) }}"
+    dest: "{{ host_results }}/snooping-{{mcast_group}}.yaml"
+  tags: ['fetch', 'fetch-snooping']
+
+
+# vim: set ts=2 shiftwidth=2 expandtab:
