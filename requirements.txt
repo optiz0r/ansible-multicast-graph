@@ -1,4 +1,4 @@
-ansible==2.4.2.0
+ansible==2.3.2.0
 asn1crypto==0.23.0
 bcrypt==3.1.4
 cffi==1.11.2
@@ -8,9 +8,14 @@ idna==2.6
 ipaddress==1.0.18
 Jinja2==2.10
 MarkupSafe==1.0
+netaddr==0.7.19
+netmiko==1.4.3
 paramiko==2.4.0
 pyasn1==0.4.2
 pycparser==2.18
+pycrypto==2.6.1
 PyNaCl==1.2.1
 PyYAML==3.12
+scp==0.10.2
 six==1.11.0
+textfsm==0.3.2
